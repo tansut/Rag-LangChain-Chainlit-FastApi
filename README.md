@@ -35,7 +35,7 @@ Create .env file and set your API keys. I included a sample as .env.sample. You 
 
 5. Run the application:
 ```bash
-python run src/main.py
+python src/main.py
 ```
 Enter your name & and a random password.
 ## To Use Your Prompt & Data:
