@@ -1,6 +1,6 @@
 from lib.rag import Rag, LLMS, EMBEDDINGS
 from lib.core import ChatSettings
-from chainlit_rag import ChainlitRag
+from chat_app import ChatApp
 import chainlit as cl
 chat_settings = ChatSettings()
 
@@ -14,7 +14,7 @@ class ResultWithFollowup(BaseModel):
     follow_up_questions: Optional[List[str]] = Field(default_factory=list, description="Followup questions as list")
 
 
-rag = ChainlitRag.rag = Rag(
+rag = ChatApp.rag = Rag(
     inputFolder="mycv",
     promptFile="mycv.txt",
     chat_settings=chat_settings,
@@ -23,13 +23,15 @@ rag = ChainlitRag.rag = Rag(
 
 rag.initialize_store()
 
-ChainlitRag.starters = [
+ChatApp.starters = [
         cl.Starter(
             label="Who is Tansu",
             message="Who is Tansu",
             icon="/public/chat-bot-svgrepo-com.svg",
             )
         ]
+
+ChatApp.use_followup = True
 
 @cl.password_auth_callback
 def auth_callback(username: str, password: str):

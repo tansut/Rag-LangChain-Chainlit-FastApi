@@ -48,7 +48,7 @@ To use your own prompt and data, follow these steps:
 
 Place your custom prompt inside the prompt folder (e.g., myprompt.txt), and upload the corresponding PDF files to the rag_source folder (e.g., rag_source/myrag/myfile.pdf).
 
-Open the src/chainlit_start.py file and configure the RAG instance as follows:
+Copy the src/mycv.py file as src/myrag.py and configure the RAG instance as follows:
 
 ```python
 rag = ChainlitRag.rag = Rag(
@@ -57,6 +57,11 @@ rag = ChainlitRag.rag = Rag(
     chat_settings=chat_settings,
     output_formatter=JsonOutputParser(pydantic_object=ResultWithFollowup)
 )
+```
+Locate src/main.py file and set your rag file.
+
+```python
+mount_chainlit(app=app, target="src/myrag.py", path="/chat")
 ```
 
 ## Contextualization

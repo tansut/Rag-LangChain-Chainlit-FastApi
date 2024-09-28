@@ -12,10 +12,11 @@ from langchain_core.messages import HumanMessage, AIMessage
 from pydantic import BaseModel, Field
 from typing import List, Union, Optional
 
-class ChainlitRag:
+class ChatApp:
     
     rag: Rag
     starters = []
+    use_followup = False
     
     @cl.on_chat_start
     async def on_chat_start():
@@ -23,12 +24,12 @@ class ChainlitRag:
     
     @cl.set_starters
     async def set_starters():
-        return ChainlitRag.starters
+        return ChatApp.starters
     
     @cl.on_settings_update
     async def setup_agent(settings):
-        ChainlitRag.rag.chat_settings.temperature = settings["temperature"]
-        ChainlitRag.rag.chat_settings.top_p = settings["top_p"]
+        ChatApp.rag.chat_settings.temperature = settings["temperature"]
+        ChatApp.rag.chat_settings.top_p = settings["top_p"]
         
     @cl.set_chat_profiles
     async def chat_profile():
@@ -37,7 +38,9 @@ class ChainlitRag:
     async def stream(message: cl.Message | str, runnable: LanguageModelLike, chat_history: UptatableChatHistory):
         response = cl.Message("")
         if isinstance(message, str): message = cl.Message(id=uuid.uuid4().hex, content=message)
-        chat_history.add_message(message=HumanMessage(content=message.content, id=message.id))
+        
+        chat_history.check_message_update(message.id)
+        
         async for chunk in runnable.astream(
             {"input": message.content, "user": cl.user_session.get("user").identifier, "chat_history": chat_history.messages},
             config=RunnableConfig(configurable={ "session_id":cl.user_session.get("session_id"),  "message_id": "message.id"}, callbacks=[cl.LangchainCallbackHandler()]),
@@ -45,6 +48,7 @@ class ChainlitRag:
             has_answer = chunk and "answer" in chunk
             await response.stream_token(token=chunk["answer"] if has_answer else "", is_sequence=True)
         
+        chat_history.add_message(message=HumanMessage(content=message.content, id=message.id))
         chat_history.add_ai_message(message=AIMessage(content=chunk["answer"], id=uuid.uuid4().hex))
         
         await response.send()
@@ -62,7 +66,7 @@ class ChainlitRag:
             fa = await cl.AskActionMessage("", actions=actions).send()
             if fa and fa.get("value") != "":
                 await cl.Message(content=fa.get("label"), type="user_message").send()
-                await ChainlitRag.stream(fa.get("label"), runnable, chat_history)
+                await ChatApp.stream(fa.get("label"), runnable, chat_history)
         
     @cl.on_chat_start
     async def on_chat_start():
@@ -74,7 +78,7 @@ class ChainlitRag:
                 Slider(
                     id="temperature",
                     label="Temperature",
-                    initial=ChainlitRag.rag.chat_settings.temperature,
+                    initial=ChatApp.rag.chat_settings.temperature,
                     min=0,
                     max=1,
                     step=0.1,
@@ -82,7 +86,7 @@ class ChainlitRag:
                 Slider(
                     id="top_p",
                     label="TopP",
-                    initial=ChainlitRag.rag.chat_settings.top_p,
+                    initial=ChatApp.rag.chat_settings.top_p,
                     min=0,
                     max=1,
                     step=0.1,
@@ -91,16 +95,16 @@ class ChainlitRag:
         ).send()
         
         try:
-            llm = ChainlitRag.rag.create_llm(LLMS[chat_profile.upper()])
-            runnable = ChainlitRag.rag.create_runnable(llm)
+            llm = ChatApp.rag.create_llm(LLMS[chat_profile.upper()])
+            runnable = ChatApp.rag.create_runnable(llm)
             cl.user_session.set("llm", llm)  
             cl.user_session.set("runnable", runnable)
             cl.user_session.set("chat_history", chat_history)
             cl.user_session.set("session_id", f"{chat_profile}/{uuid.uuid4().hex}")
             if os.getenv("CONTEXTUALIZATION") == "True": 
-                ChainlitRag.rag.contextualize_llm = llm 
+                ChatApp.rag.contextualize_llm = llm 
             else: 
-                ChainlitRag.rag.contextualize_llm = None
+                ChatApp.rag.contextualize_llm = None
         except Exception as ex:
             await cl.Message(f"Please ensure you have set API keys in .env file").send()
             print(ex)
@@ -110,14 +114,14 @@ class ChainlitRag:
         llm: LanguageModelLike = cl.user_session.get("llm")  
         chat_history = cl.user_session.get("chat_history")  
         try:
-            llm.temperature = ChainlitRag.rag.chat_settings.temperature
-            llm.top_p = ChainlitRag.rag.chat_settings.top_p
+            llm.temperature = ChatApp.rag.chat_settings.temperature
+            llm.top_p = ChatApp.rag.chat_settings.top_p
         except Exception as e:
             print(e)
         
         runnable = cl.user_session.get("runnable")  
         try:
-            await ChainlitRag.stream(message, runnable, chat_history)
+            await ChatApp.stream(message, runnable, chat_history)
         except Exception as ex:
             await cl.Message(f"An error occured while processing your message.\n{ex}").send()
             print(ex)

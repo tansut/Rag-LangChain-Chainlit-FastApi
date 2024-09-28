@@ -39,8 +39,9 @@ EMBEDDINGS = Enum("EMBEDDINGS", ["openai", "cohere", "huggingface"])
 class UptatableChatHistory(BaseChatMessageHistory, BaseModel):
     messages: List[BaseMessage] = Field(default_factory=list)
     
-    def check_message_update(self, message: BaseMessage):
-        existing = next((x for x in self.messages if x.id == message.id), None)
+    def check_message_update(self, message_or_id: BaseMessage | str):
+        id = message_or_id.id if isinstance(message_or_id, BaseMessage) else message_or_id
+        existing = next((x for x in self.messages if x.id == id), None)
         if existing:
             index = self.messages.index(existing)
             del self.messages[-(len(self.messages) - index):] 
