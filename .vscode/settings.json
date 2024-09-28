@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "https://www.artillery.io/schema.json": [],
+        "https://bitbucket.org/atlassianlabs/intellij-bitbucket-references-plugin/raw/master/src/main/resources/schemas/bitbucket-pipelines.schema.json": "file:///Users/tansu/projects/yazar-gpt-poc/bitbucket-pipelines.yml"
+    }
+}

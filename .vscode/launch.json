@@ -1,0 +1,15 @@
+{
+    "configurations": [
+      {
+        "name": "FastAPI Debug:App",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "src/main.py",
+        "console": "integratedTerminal",
+        "env": {
+          
+        }
+      }
+    ]
+  }
+  
