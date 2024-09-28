@@ -56,7 +56,7 @@ class UptatableChatHistory(BaseChatMessageHistory, BaseModel):
         self.messages = []
 
 class Rag:
-    def __init__(self, inputFolder: str, promptFile: str, output_formatter: BaseLLMOutputParser = None, embedding: EMBEDDINGS = EMBEDDINGS.openai,  chat_settings: ChatSettings = ChatSettings()):
+    def __init__(self, inputFolder: str, promptFile: str, output_formatter: BaseLLMOutputParser = None, embedding: EMBEDDINGS = EMBEDDINGS.openai, contextualize_prompt: str = None,  chat_settings: ChatSettings = ChatSettings()):
         inputFiles = os.listdir(f"rag_source/{inputFolder}")
         self.inputFiles = list(map(lambda x: os.path.abspath(f"rag_source/{inputFolder}/{x}"), inputFiles))
         with open(f"prompt/{promptFile}", "r") as file:
@@ -76,20 +76,18 @@ class Rag:
             LLMS.COHERE: ChatCohere,
             LLMS.OLLAMA: ChatOllama,
         }
-        self.contextualize_prompt = (
-            "Sana yapay zeka ve insan arasındaki sohbet geçmişi ve insanın sorduğu en son soru verilecek."
-            "En son soru sohbet geçmişine referans içerebilir. Senden istediğim,"
-            "insanın sorduğu en son soruyu sohbet geçmişi olmadan da anlaşılabilecek bir soru haline getir."
-            "SAKIN SORUYU YANITLAMA, sadece gerekiyorsa soruyu yeniden oluştur, gerekmiyorsa son soruyu aynen kullan ve geri dönder."
-            "Sobet geçmişi:"
+        self.contextualize_prompt = contextualize_prompt or (
+            """Given a chat history and the latest user question \
+            which might reference context in the chat history, formulate a standalone question \
+            which can be understood without the chat history. Do NOT answer the question, \
+            just reformulate it if needed and otherwise return it as is.""" 
         )
         
         self.contextualize_template = ChatPromptTemplate.from_messages(
             [
                 ("system", self.contextualize_prompt),
                 MessagesPlaceholder("chat_history"),
-                ("human", "Son Soru: {input}"),
-                ("human", "Son Soru'yu SORUYU YANITLAMA, sadece gerekiyorsa sohbet geçmişini de kullanarak soruyu daha anlaşılır olarak yeniden oluştur, soruyu okuyan neyi sorduğumu sohbet geçmişi olmadan anlasın. Gerekmiyorsa son soruyu olduğu gibi geri ver, CEVAPLAMA."), 
+                ("human", "Latest Question: {input}")
             ]
         )
         
@@ -164,8 +162,8 @@ class Rag:
                         | RunnablePassthrough().assign(context=itemgetter("input") | retriever)
                         )
                 
-        rag_chain = ( RunnableLambda(ensureContextualize) 
-                    | RunnablePassthrough.assign(context = format_docs) 
+        rag_chain = ( RunnableLambda(ensureContextualize).with_config({"run_name":"ContextualizationCheck"}) 
+                    | RunnablePassthrough.assign(context = format_docs).with_config({"run_name":"QueryDocuments"}) 
                     | self.prompt_template 
                     | llm 
                     | self.output_formatter

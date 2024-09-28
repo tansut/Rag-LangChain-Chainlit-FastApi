@@ -162,3 +162,5 @@ cython_debug/
 .DS_Store
 None
 vector_store
+rag_source/secure*
+prompt/secure*
