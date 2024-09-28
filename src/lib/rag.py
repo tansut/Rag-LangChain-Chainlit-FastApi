@@ -29,7 +29,7 @@ from typing import List, Union, Optional
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables import ConfigurableFieldSpec
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda, Runnable, RunnableConfig
-from langchain_core.output_parsers import JsonOutputParser, BaseLLMOutputParser
+from langchain_core.output_parsers import StrOutputParser, BaseLLMOutputParser
 from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate, BasePromptTemplate, format_document
 
@@ -57,7 +57,7 @@ class UptatableChatHistory(BaseChatMessageHistory, BaseModel):
         self.messages = []
 
 class Rag:
-    def __init__(self, inputFolder: str, promptFile: str, output_formatter: BaseLLMOutputParser = None, embedding: EMBEDDINGS = EMBEDDINGS.openai, contextualize_prompt: str = None,  chat_settings: ChatSettings = ChatSettings()):
+    def __init__(self, inputFolder: str, promptFile: str, output_formatter: BaseLLMOutputParser = StrOutputParser(), embedding: EMBEDDINGS = EMBEDDINGS.openai, contextualize_prompt: str = None, structured_output = None,  chat_settings: ChatSettings = ChatSettings()):
         inputFiles = os.listdir(f"rag_source/{inputFolder}")
         self.inputFiles = list(map(lambda x: os.path.abspath(f"rag_source/{inputFolder}/{x}"), inputFiles))
         with open(f"prompt/{promptFile}", "r") as file:
@@ -67,6 +67,7 @@ class Rag:
             MessagesPlaceholder("chat_history"),
             ("human", "{input}"),
         ])
+        self.structured_output = structured_output
         self.embedding = embedding
         self.chat_settings = chat_settings
         self.inputFolder =  inputFolder
@@ -183,6 +184,9 @@ class Rag:
            "temperature": chat_settings.temperature,
            "top_p": chat_settings.top_p,
         }
+
+        
         llm = self.llm_functions[llm_type](**args)
+        llm = llm if self.structured_output == None else llm.with_structured_output(self.structured_output)
         return llm
     

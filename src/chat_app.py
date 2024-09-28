@@ -43,30 +43,37 @@ class ChatApp:
         
         async for chunk in runnable.astream(
             {"input": message.content, "user": cl.user_session.get("user").identifier, "chat_history": chat_history.messages},
-            config=RunnableConfig(configurable={ "session_id":cl.user_session.get("session_id"),  "message_id": "message.id"}, callbacks=[cl.LangchainCallbackHandler()]),
+            config=RunnableConfig(configurable={ }, callbacks=[cl.LangchainCallbackHandler()]),
         ):
-            has_answer = chunk and "answer" in chunk
-            await response.stream_token(token=chunk["answer"] if has_answer else "", is_sequence=True)
+            if ChatApp.use_followup:
+                has_answer = chunk and "answer" in chunk
+                await response.stream_token(token=chunk["answer"] if has_answer else "", is_sequence=True)
+            else:
+                await response.stream_token(token=chunk)
+                
+        ai_answer = chunk["answer"] if ChatApp.use_followup else chunk
+                
         
         chat_history.add_message(message=HumanMessage(content=message.content, id=message.id))
-        chat_history.add_ai_message(message=AIMessage(content=chunk["answer"], id=uuid.uuid4().hex))
+        chat_history.add_ai_message(message=AIMessage(content=ai_answer, id=uuid.uuid4().hex))
         
         await response.send()
         
-        follow_ups = chunk["follow_up_questions"]
-        actions = []
-        
-        if (follow_ups and len(follow_ups) > 0):
-        
-            for fq in follow_ups:
-                actions.append(cl.Action(fq,fq, f"{fq}"))
+        if ChatApp.use_followup:        
+            follow_ups = chunk["follow_up_questions"]
+            actions = []
             
-            actions.append(cl.Action("","","✅ I have question"))
+            if (follow_ups and len(follow_ups) > 0):
             
-            fa = await cl.AskActionMessage("", actions=actions).send()
-            if fa and fa.get("value") != "":
-                await cl.Message(content=fa.get("label"), type="user_message").send()
-                await ChatApp.stream(fa.get("label"), runnable, chat_history)
+                for fq in follow_ups:
+                    actions.append(cl.Action(fq,fq, f"{fq}"))
+                
+                actions.append(cl.Action("","","✅ I have question"))
+                
+                fa = await cl.AskActionMessage("", actions=actions).send()
+                if fa and fa.get("value") != "":
+                    await cl.Message(content=fa.get("label"), type="user_message").send()
+                    await ChatApp.stream(fa.get("label"), runnable, chat_history)
         
     @cl.on_chat_start
     async def on_chat_start():

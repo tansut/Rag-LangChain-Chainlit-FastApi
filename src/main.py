@@ -15,6 +15,7 @@ def run_application():
 def create_app() -> FastAPI:
     app = FastAPI();
     mount_chainlit(app=app, target="src/mycv.py", path="/chat")
+    #mount_chainlit(app=app, target="src/mycv_no_followup.py", path="/chat")
     
     @app.get("/")
     def read_root():
