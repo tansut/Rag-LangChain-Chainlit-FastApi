@@ -18,7 +18,6 @@ rag = ChainlitRag.rag = Rag(
     inputFolder="mycv",
     promptFile="mycv.txt",
     chat_settings=chat_settings,
-    embedding=EMBEDDINGS.openai,
     output_formatter = JsonOutputParser(pydantic_object=ResultWithFollowup)
 )
 
