@@ -28,9 +28,10 @@ source .venv/bin/activate
 3. Install dependencies:
 ```bash
 pip install -r requirements.txt
-Create .env files and set your API keys. I included a sample as .env.sample. You don't need to set all of then API keys, just one of them is enough.
 ```
 4. Create .env files and set your API keys.
+
+Create .env file and set your API keys. I included a sample as .env.sample. You don't need to set all of then API keys, just one of them is enough.
 5. Run the application:
 ```bash
 python run src/main.py
