@@ -1,6 +1,6 @@
 # RAG ChatBot App
 ## Description:
-An RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain, Faiss, and FastAPI. This app enables intelligent, dynamic interactions by retrieving relevant information from a vector store and addressing users personally based on their queries.
+RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain, Faiss, and FastAPI. This app enables intelligent, dynamic interactions by retrieving relevant information from a vector store and addressing users personally based on their queries.
 
 ## Features:
 **Updatable chat history**: 
