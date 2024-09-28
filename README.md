@@ -2,6 +2,9 @@
 ## Description:
 An RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain, Faiss, and FastAPI. This app enables intelligent, dynamic interactions by retrieving relevant information from a vector store and addressing users personally based on their queries.
 
+![](/assets/sample-video.mp4)
+
+
 ## Features:
 **Updatable chat history**: 
 Users can update previous messages in the conversation.
@@ -64,7 +67,7 @@ CONTEXTUALIZATION=True
 Contextualization allows the chatbot to better understand user queries by maintaining a reference to previous interactions, improving the relevance of retrieved information.
 
 ## Embeddings
-There are two options for generating embeddings: OpenAI or HuggingFace (the default is HuggingFace).
+There are two options for generating embeddings: OpenAI or HuggingFace (the default is OpenAI).
 
 To configure the HuggingFace embedding model, set the HUGGINGFACE_EMBED_MODEL environment variable with your desired model. For example:
 ```bash

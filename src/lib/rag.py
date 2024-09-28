@@ -56,7 +56,7 @@ class UptatableChatHistory(BaseChatMessageHistory, BaseModel):
         self.messages = []
 
 class Rag:
-    def __init__(self, inputFolder: str, promptFile: str, output_formatter: BaseLLMOutputParser = None, embedding: EMBEDDINGS = EMBEDDINGS.huggingface,  chat_settings: ChatSettings = ChatSettings()):
+    def __init__(self, inputFolder: str, promptFile: str, output_formatter: BaseLLMOutputParser = None, embedding: EMBEDDINGS = EMBEDDINGS.openai,  chat_settings: ChatSettings = ChatSettings()):
         inputFiles = os.listdir(f"rag_source/{inputFolder}")
         self.inputFiles = list(map(lambda x: os.path.abspath(f"rag_source/{inputFolder}/{x}"), inputFiles))
         with open(f"prompt/{promptFile}", "r") as file:
