@@ -123,7 +123,7 @@ class Rag:
     
     def initialize_store(self) -> FAISS:
         embedding = self.get_embedding()
-        dir = f"{os.getenv("VECTOR_STORE_PATH")}/{self.inputFolder}/{self.embedding.name}/{self.inputFolder}"
+        dir = f"{os.getenv("VECTOR_STORE_PATH")}/{self.inputFolder}/{self.embedding.name}"
         chunkSize: int = 2000
         chunkOverlap: int = 400
         self.store: FAISS = None
