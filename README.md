@@ -1,9 +1,6 @@
 # RAG ChatBot App
 ## Description:
-An RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain, Faiss, and FastAPI. This app enables intelligent, dynamic interactions by retrieving relevant information from a vector store and addressing users personally based on their queries.
-
-
-![Sample](/assets/home-screen.png?raw=true "Rag Demo using LangChain, Chainlit, Faiss & FastApi")
+RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain, Faiss, and FastAPI. This app enables intelligent, dynamic interactions by retrieving relevant information from a vector store and addressing users personally based on their queries.
 
 ## Features:
 **Updatable chat history**: 
@@ -14,6 +11,8 @@ Users can update previous messages in the conversation.
 **Follow-up questions**: The bot generates intelligent follow-up questions to drive deeper engagement.
 
 **Authentication and personalized user interactions**: The bot authenticates users and addresses them by their name during interactions.
+
+![Sample](/assets/home-screen.png?raw=true "Rag Demo using LangChain, Chainlit, Faiss & FastApi")
 
 ## To Run:
 1. Clone the repository:
@@ -35,7 +34,7 @@ Create .env file and set your API keys. I included a sample as .env.sample. You 
 
 5. Run the application:
 ```bash
-python run src/main.py
+python src/main.py
 ```
 Enter your name & and a random password.
 ## To Use Your Prompt & Data:
