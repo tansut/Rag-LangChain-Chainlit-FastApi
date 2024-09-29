@@ -3,12 +3,13 @@
 RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain, Faiss, and FastAPI. This app enables intelligent, dynamic interactions by retrieving relevant information from a vector store and addressing users personally based on their queries.
 
 ## Features:
-**Updatable chat history**: 
-Users can update previous messages in the conversation.
-
 **Contextualization**: The bot can contextualize user questions and retrieve more relevant chunks from the vector store, improving the accuracy of its responses.
 
-**Follow-up questions**: The bot generates intelligent follow-up questions to drive deeper engagement.
+**Reusable classes**: The app includes reusable classes for handling RAG, chat settings, chat history  and more.
+
+**Follow-up questions**: App generates intelligent follow-up questions to drive deeper engagement.
+
+**Updatable chat history**: Users can update previous messages in the conversation.
 
 **Authentication and personalized user interactions**: The bot authenticates users and addresses them by their name during interactions.
 
@@ -29,7 +30,9 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 4. Create .env file and set your API keys.
-
+```bash
+cp .env.sample .env
+```
 Create .env file and set your API keys. I included a sample as .env.sample. You don't need to set all of then API keys, just one of them is enough.
 
 5. Run the application:
