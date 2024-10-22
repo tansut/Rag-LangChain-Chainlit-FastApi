@@ -13,7 +13,7 @@ RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain
 
 **Authentication and personalized user interactions**: The bot authenticates users and addresses them by their name during interactions.
 
-**Speech To Text and Text to Speech**: This app provides a seamless chat experience with speech-to-text and text-to-speech capabilities, enhancing accessibility and convenience for users.
+**Speech To Text and Text to Speech**: This app provides a seamless chat experience with speech-to-text and text-to-speech capabilities, enhancing accessibility and convenience for users. You need to set OPENAI_API_KEY environment key to use speech to text. I used ElevenLabs for text to speech.
 
 ![Sample](/assets/home-screen.png?raw=true "Rag Demo using LangChain, Chainlit, Faiss & FastApi")
 
@@ -53,20 +53,14 @@ To use your own prompt and data, follow these steps:
 
 Place your custom prompt inside the prompt folder (e.g., myprompt.txt), and upload the corresponding PDF files to the rag_source folder (e.g., rag_source/myrag/myfile.pdf).
 
-Copy the src/mycv.py file as src/myrag.py and configure the RAG instance as follows:
+Update create_rag method in src/chat_app.py file.
 
 ```python
-rag = ChainlitRag.rag = Rag(
+rag = Rag(
     inputFolder="myrag",
     promptFile="myprompt.txt",
-    chat_settings=chat_settings,
-    output_formatter=JsonOutputParser(pydantic_object=ResultWithFollowup)
+    chat_settings=chat_settings
 )
-```
-Locate src/main.py file and set your rag file.
-
-```python
-mount_chainlit(app=app, target="src/myrag.py", path="/chat")
 ```
 
 ## Contextualization
