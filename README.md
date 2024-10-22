@@ -17,7 +17,6 @@ RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain
 
 ![Sample](/assets/home-screen.png?raw=true "Rag Demo using LangChain, Chainlit, Faiss & FastApi")
 
-![Sample](/assets/settings.png?raw=true "Rag Demo using LangChain, Chainlit, Faiss & FastApi")
 
 ## To Run:
 1. Clone the repository:
