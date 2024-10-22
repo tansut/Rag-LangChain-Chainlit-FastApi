@@ -33,6 +33,8 @@ from langchain_core.output_parsers import StrOutputParser, BaseLLMOutputParser
 from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate, BasePromptTemplate, format_document
 
+
+
 LLMS = Enum("LLMS", ["OPENAI", "ANTROPHIC", "COHERE", "OLLAMA"])
 EMBEDDINGS = Enum("EMBEDDINGS", ["openai", "cohere", "huggingface"])
 
@@ -65,7 +67,8 @@ class Rag:
         self.prompt_template = ChatPromptTemplate.from_messages([
             ("system", prompt),
             MessagesPlaceholder("chat_history"),
-            ("human", "{input}"),
+            #("system", "Generate JSON based on the format you are given before."),
+            ("human", "{input}")
         ])
         self.structured_output = structured_output
         self.embedding = embedding
@@ -81,14 +84,14 @@ class Rag:
         self.contextualize_prompt = contextualize_prompt or (
             """Given a chat history and the latest user question \
             which might reference context in the chat history, formulate a standalone question \
-            which can be understood without the chat history. Do NOT answer the question, \
-            just reformulate it if needed and otherwise return it as is.""" 
+            which can be understood without the chat history. """ 
         )
         
         self.contextualize_template = ChatPromptTemplate.from_messages(
             [
                 ("system", self.contextualize_prompt),
                 MessagesPlaceholder("chat_history"),
+                # ("system", "Do NOT answer the question, just reformulate it if needed and otherwise return it as is."),
                 ("human", "Latest Question: {input}")
             ]
         )
@@ -123,7 +126,7 @@ class Rag:
     
     def initialize_store(self) -> FAISS:
         embedding = self.get_embedding()
-        dir = f"{os.getenv("VECTOR_STORE_PATH")}/{self.inputFolder}/{self.embedding.name}"
+        dir = f"{os.getenv("VECTOR_STORE_PATH")}/{self.inputFolder}/{self.embedding.name}/{self.inputFolder}"
         chunkSize: int = 2000
         chunkOverlap: int = 400
         self.store: FAISS = None

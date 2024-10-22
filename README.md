@@ -13,7 +13,11 @@ RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain
 
 **Authentication and personalized user interactions**: The bot authenticates users and addresses them by their name during interactions.
 
+**Speech To Text and Text to Speech**: This app provides a seamless chat experience with speech-to-text and text-to-speech capabilities, enhancing accessibility and convenience for users.
+
 ![Sample](/assets/home-screen.png?raw=true "Rag Demo using LangChain, Chainlit, Faiss & FastApi")
+
+![Sample](/assets/settings.png?raw=true "Rag Demo using LangChain, Chainlit, Faiss & FastApi")
 
 ## To Run:
 1. Clone the repository:
