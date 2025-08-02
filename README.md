@@ -1,5 +1,7 @@
 # Moved to:
 
+Please use below repository for an updated version.
+
 [https://github.com/aibrite/chatbot-with-rag](https://github.com/aibrite/chatbot-with-rag)
 
 # RAG ChatBot App
