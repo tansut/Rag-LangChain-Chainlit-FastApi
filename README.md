@@ -4,7 +4,7 @@ Please use below repository for an updated version.
 
 [https://github.com/aibrite/chatbot-with-rag](https://github.com/aibrite/chatbot-with-rag)
 
-Also see [https:/chat.aibrite.com](https:/chat.aibrite.com]) for JS version.
+Also see [https:/chat.aibrite.com](https:/chat.aibrite.com) for JS version.
 
 # RAG ChatBot App
 ## Description:
