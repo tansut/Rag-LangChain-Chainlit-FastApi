@@ -4,8 +4,6 @@ Please use below repository for an updated version.
 
 [https://github.com/aibrite/chatbot-with-rag](https://github.com/aibrite/chatbot-with-rag)
 
-Also see [https:/chat.aibrite.com](https:/chat.aibrite.com) for JS version.
-
 # RAG ChatBot App
 ## Description:
 RAG (Retrieval-Augmented Generation) ChatBot app built using Chainlit, LangChain, Faiss, and FastAPI. This app enables intelligent, dynamic interactions by retrieving relevant information from a vector store and addressing users personally based on their queries.
